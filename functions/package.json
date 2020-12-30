@@ -38,8 +38,11 @@
     "jsonwebtoken": "^8.5.1",
     "libxmljs": "^0.19.7",
     "lodash": "^4.17.20",
+    "md5": "^2.3.0",
     "mixpanel": "^0.13.0",
     "moment": "^2.29.1",
+    "node-forge": "^0.10.0",
+    "request-promise-native": "^1.0.9",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {

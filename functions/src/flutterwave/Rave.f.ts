@@ -1,47 +1,55 @@
-const forge = require("node-forge");
-const request = require("request-promise-native");
-const md5 = require("md5");
+import forge from 'node-forge';
+import request from 'request-promise-native';
+import md5 from 'md5';
+
+
+// const forge = require("node-forge");
+// const request = require("request-promise-native");
+// const md5 = require("md5");
+
 const { raveEndpoint } = require("../helpers/config");
 
 
 class Rave {
+  public_key: string;
+  secret_key: string;
   /**
    * Rave object constructor
    * @param {*} public_key This is a string that can be found in merchant rave dashboard
    * @param {*} secret_key This is a string that can be found in merchant rave dashboard
    */
-  constructor(public_key, secret_key) {
+  constructor(public_key: string, secret_key: string) {
     this.public_key = public_key;
     this.secret_key = secret_key;
   }
 
-  encryptCardDetails(card_details) {
-    card_details = JSON.stringify(card_details);
-    let cipher = forge.cipher.createCipher(
+  encryptCardDetails(cardDetails) {
+    const card_details = JSON.stringify(cardDetails);
+    const cipher = forge.cipher.createCipher(
       "3DES-ECB",
       forge.util.createBuffer(this.getKey())
     );
     cipher.start({ iv: "" });
     cipher.update(forge.util.createBuffer(card_details, "utf-8"));
     cipher.finish();
-    let encrypted = cipher.output;
+    const encrypted = cipher.output;
     return forge.util.encode64(encrypted.getBytes());
   }
 
   getKey() {
-    let sec_key = this.secret_key;
-    let keymd5 = md5(sec_key);
-    let keymd5last12 = keymd5.substr(-12);
+    const sec_key = this.secret_key;
+    const keymd5 = md5(sec_key);
+    const keymd5last12 = keymd5.substr(-12);
 
-    let seckeyadjusted = sec_key.replace("FLWSECK-", "");
-    let seckeyadjustedfirst12 = seckeyadjusted.substr(0, 12);
+    const seckeyadjusted = sec_key.replace("FLWSECK-", "");
+    const seckeyadjustedfirst12 = seckeyadjusted.substr(0, 12);
 
     return seckeyadjustedfirst12 + keymd5last12;
   }
 
   initiatePayment(card_details) {
 
-    let options = {
+    const options = {
       url: "",
       method: "",
       headers: {
@@ -57,8 +65,8 @@ class Rave {
     }
 
     return new Promise((resolve, reject) => {
-      let encrypted_card_details = card_details;//this.encryptCardDetails(card_details);
-      let payment_options = Object.assign({}, options);
+      const encrypted_card_details = card_details;//this.encryptCardDetails(card_details);
+      const payment_options = Object.assign({}, options);
       payment_options.url = raveEndpoint;
       payment_options.body.client = encrypted_card_details;
       payment_options.method = "POST";
