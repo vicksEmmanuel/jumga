@@ -21,7 +21,7 @@
     "@types/lodash": "^4.14.165",
     "@types/mixpanel": "^2.14.2",
     "africastalking": "^0.5.2",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "busboy-firebase": "^1.0.8",

@@ -1,10 +1,10 @@
 import * as functions from 'firebase-functions';
 import * as _ from "lodash";
-import * as Mixpanel from 'mixpanel';
+// import * as Mixpanel from 'mixpanel';
 
 const admin = require("firebase-admin");
 const dotenv = require("dotenv");
-const axios = require("axios");
+// const axios = require("axios");
 const hash = require("bcryptjs");
 const { auth } = require("firebase/app");
 
