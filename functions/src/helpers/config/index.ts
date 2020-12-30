@@ -20,7 +20,12 @@ const CONFIG = (isProduction) ?
   storageUrl: "https://storage.googleapis.com/jumga-production.appspot.com",
   dbUrl: "https://jumga-production.firebaseio.com",
   defaultBucket: "jumga-production.appspot.com",
-  environment: "production"
+  environment: "production",
+  raveEndpoint: "https://api.ravepay.co/flwv3-pug/getpaidx/api/charge",
+  FWPubKey: "FLWPUBK-270630d3ec19b8aafb4e952c9932c8b9-X",
+  FWSecret: "FLWSECK-8029f4652f4a232a4977cffad94a1714-X",
+  EncryptionKey: "8029f4652f4aa1503a5e5cb8",
+  
 }
 :
 {
@@ -30,7 +35,11 @@ const CONFIG = (isProduction) ?
   storageUrl: "https://storage.googleapis.com/jumga-staging.appspot.com",
   dbUrl: "https://jumga-staging.firebaseio.com",
   defaultBucket: "jumga-staging.firebaseapp.com",
-  environment: "staging"
+  environment: "staging",
+  raveEndpoint: "https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/charge",
+  FWPubKey: "FLWPUBK-cba30399325b69565f6c9a752d239000-X",
+  FWSecret: "FLWSECK-f2a0b0a192c63cba5f20f6b2c2c37927-X",
+  EncryptionKey: "f2a0b0a192c6ee76d1071e80",
 }
 
 
@@ -52,5 +61,9 @@ module.exports = {
   serviceAccount: CONFIG.serviceAccount,
   auth,
   admin,
-  _
+  _,
+  raveEndpoint: CONFIG.raveEndpoint,
+  FWPubKey: CONFIG.FWPubKey,
+  FWSecret: CONFIG.FWSecret,
+  EncryptionKey: CONFIG.EncryptionKey
 };
