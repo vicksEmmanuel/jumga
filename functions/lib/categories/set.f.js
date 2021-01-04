@@ -4,6 +4,9 @@ const functions = require("firebase-functions");
 const _ = require("lodash");
 const firebase_admin_1 = require("firebase-admin");
 const onSetProductCategories = functions.https.onRequest(async (req, res) => {
+    /**
+     * TODO: Make this route accessible to admins
+     */
     const body = req === null || req === void 0 ? void 0 : req.body;
     const categories = body === null || body === void 0 ? void 0 : body.categories;
     const errorMessage = () => {

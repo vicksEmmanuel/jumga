@@ -1,5 +1,4 @@
 import * as functions from 'firebase-functions';
-import * as _ from 'lodash';
 
 const handleRedirect = functions.https.onRequest(async (req, res) => {
   

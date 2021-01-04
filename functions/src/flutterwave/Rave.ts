@@ -1,14 +1,21 @@
 import forge from 'node-forge';
-import request from 'request-promise-native';
 import md5 from 'md5';
+import axios from 'axios';
 
-
-// const forge = require("node-forge");
-// const request = require("request-promise-native");
-// const md5 = require("md5");
 
 const { raveEndpoint } = require("../helpers/config");
 
+export interface Customers {
+  email:string,
+  name: string,
+  phonenumber? : string
+}
+
+export interface PaymentCustomization {
+  title:string,
+  description: string
+  logo: string
+}
 
 class Rave {
   public_key: string;
@@ -47,40 +54,31 @@ class Rave {
     return seckeyadjustedfirst12 + keymd5last12;
   }
 
-  initiatePayment(card_details) {
+  initiatePayment(paymentDetails: {
+    tx_ref: string,
+    amount: number,
+    currency: string,
+    integrity_hash: string,
+    payment_options: string,
+    customer: Customers,
+    customization: PaymentCustomization
+  }) {
 
-    const options = {
-      url: "",
-      method: "",
+    const paymentOptions = {
       headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+        'Authorization': `Bearer ${this.secret_key}`
       },
-      body: {
-          "PBFPubKey": "",
-          "alg": "3DES-24",
-          client: "",
-      },
-      json: true
     }
 
     return new Promise((resolve, reject) => {
-      const encrypted_card_details = card_details;//this.encryptCardDetails(card_details);
-      const payment_options = Object.assign({}, options);
-      payment_options.url = raveEndpoint;
-      payment_options.body.client = encrypted_card_details;
-      payment_options.method = "POST";
-      payment_options.body.PBFPubKey = this.public_key; // set public key
-
-      console.log("payment_options == ", payment_options);
-
-      request(payment_options)
-        .then((result) => {
+      console.log("payment_options == ", paymentOptions);
+      axios.post(raveEndpoint, paymentDetails, paymentOptions)
+        .then(result => {
           resolve(result);
         })
-        .catch((err) => {
+        .catch(err => {
           reject(err);
-        });
+        })
     });
   }
 }

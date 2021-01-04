@@ -1,0 +1,159 @@
+.box {
+  -webkit-box-shadow: 3px 3px 5px 6px rgba(0, 0, 0, 0.034);  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  -moz-box-shadow:    3px 3px 5px 6px rgba(0, 0, 0, 0.034); /* Firefox 3.5 - 3.6 */
+  box-shadow:         3px 3px 5px 6px rgba(0, 0, 0, 0.034); 
+
+    margin: 5px;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  @keyframes float {
+    0% {
+      box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
+      transform: translatey(0px);
+    }
+    50% {
+      box-shadow: 0 25px 15px 0px rgba(0,0,0,0.2);
+      transform: translatey(-20px);
+    }
+    100% {
+      box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
+      transform: translatey(0px);
+    }
+  }
+
+  .avatar {
+    box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
+    transform: translatey(0px);
+    animation: float 6s ease-in-out infinite;
+    width: 20px;
+    z-index: 10;
+    height: 20px;
+    border-radius: 50%;
+    background-color: gray;
+  }
+  .error-field {
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545;
+  }
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    background-color: cornflowerblue;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-container {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .team1 {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+  }
+  .team2 {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+  }
+  .team3 {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+  }
+  .team4 {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+  }
+  .team5 {
+    position: absolute;
+    top: 30%;
+    left: 80%;
+  }
+
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  .stadium {
+    width: 100%; 
+    height: 500px; 
+    margin: 0;
+    border-radius: 0%;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  .stadium-create {
+    height: 510px;
+  }
+  .avatar-icon {
+    width: 30px;
+    height: 30px;
+    fill: white;
+    opacity: 0.9;
+    position: relative;
+    left: 30%;
+    top: 20%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+  }
+
+  .logo {
+    width: 90px;
+    height: 44px;
+    margin: 30px;
+  }
+
+  .form-label {
+    font-weight: bolder;
+    font-size: 12px;
+    letter-spacing: 3px;
+    font-family: 'Roboto';
+  }
+
+  .link-ext {
+    font-family: 'Roboto';
+    font-size: 10px;
+    font-weight: bold;
+    color: gray;
+  }
+
+  .link {
+    font-size: 10px;
+    font-weight: bold;
+    font-family: 'Roboto';
+    color: blueviolet;
+  }
+  .error-field {
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  @media only screen and (min-width: 600px) {
+    .stadium {
+      border-radius: 0%;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+  }
+
+  @media only screen and (min-width: 768px) {
+    .stadium {
+      margin: 0;
+      border-radius: 0%;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+  }
