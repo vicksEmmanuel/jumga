@@ -5,7 +5,6 @@ const _ = require("lodash");
 // import * as Mixpanel from 'mixpanel';
 const admin = require("firebase-admin");
 const dotenv = require("dotenv");
-// const axios = require("axios");
 const hash = require("bcryptjs");
 const { auth } = require("firebase/app");
 dotenv.config();
@@ -17,7 +16,13 @@ const CONFIG = (isProduction) ?
         storageUrl: "https://storage.googleapis.com/jumga-production.appspot.com",
         dbUrl: "https://jumga-production.firebaseio.com",
         defaultBucket: "jumga-production.appspot.com",
-        environment: "production"
+        environment: "production",
+        raveEndpoint: "https://api.flutterwave.com/v3/payments",
+        FWPubKey: "FLWPUBK-270630d3ec19b8aafb4e952c9932c8b9-X",
+        FWSecret: "FLWSECK-8029f4652f4a232a4977cffad94a1714-X",
+        EncryptionKey: "8029f4652f4aa1503a5e5cb8",
+        jumgaLogo: 'https://firebasestorage.googleapis.com/v0/b/jumga-production.appspot.com/o/jumga%20logo.png?alt=media&token=64deb6de-0897-4df4-94f6-4ca81abd5e0b',
+        webhook: "https://webhook.site/43328766-3fe9-40f8-a981-c84189c18f61"
     }
     :
         {
@@ -26,7 +31,13 @@ const CONFIG = (isProduction) ?
             storageUrl: "https://storage.googleapis.com/jumga-staging.appspot.com",
             dbUrl: "https://jumga-staging.firebaseio.com",
             defaultBucket: "jumga-staging.firebaseapp.com",
-            environment: "staging"
+            environment: "staging",
+            FWPubKey: "FLWPUBK-cba30399325b69565f6c9a752d239000-X",
+            FWSecret: "FLWSECK-f2a0b0a192c63cba5f20f6b2c2c37927-X",
+            raveEndpoint: "https://api.flutterwave.com/v3/payments",
+            EncryptionKey: "f2a0b0a192c6ee76d1071e80",
+            jumgaLogo: 'https://firebasestorage.googleapis.com/v0/b/jumga-staging.appspot.com/o/jumga%20logo.png?alt=media&token=9ae55924-7d87-408c-82d3-7cf8c1a26859',
+            webhook: "https://webhook.site/43328766-3fe9-40f8-a981-c84189c18f61"
         };
 //FIREBASE DATABASE (FIRESTORE) CONFIG
 const RootDocuments = {
@@ -42,6 +53,15 @@ module.exports = {
     serviceAccount: CONFIG.serviceAccount,
     auth,
     admin,
-    _
+    _,
+    raveEndpoint: CONFIG.raveEndpoint,
+    FWPubKey: CONFIG.FWPubKey,
+    FWSecret: CONFIG.FWSecret,
+    EncryptionKey: CONFIG.EncryptionKey,
+    jumgaHashKey: 'jumgaparadoxyconfig2021',
+    jumgaLogo: CONFIG.jumgaLogo,
+    storePrice: 20,
+    currency: 'USD',
+    webhook: CONFIG.webhook
 };
 //# sourceMappingURL=index.js.map
