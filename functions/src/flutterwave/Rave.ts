@@ -61,7 +61,8 @@ class Rave {
     integrity_hash: string,
     payment_options: string,
     customer: Customers,
-    customization: PaymentCustomization
+    customization: PaymentCustomization,
+    payment_plan ? : string
   }) {
 
     const paymentOptions = {
@@ -74,7 +75,10 @@ class Rave {
       console.log("payment_options == ", paymentOptions);
       axios.post(raveEndpoint, paymentDetails, paymentOptions)
         .then(result => {
-          resolve(result);
+          resolve({
+            status: result.status,
+            data: result.data
+          });
         })
         .catch(err => {
           reject(err);

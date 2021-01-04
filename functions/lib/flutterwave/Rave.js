@@ -41,7 +41,10 @@ class Rave {
             console.log("payment_options == ", paymentOptions);
             axios_1.default.post(raveEndpoint, paymentDetails, paymentOptions)
                 .then(result => {
-                resolve(result);
+                resolve({
+                    status: result.status,
+                    data: result.data
+                });
             })
                 .catch(err => {
                 reject(err);

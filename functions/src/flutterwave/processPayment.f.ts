@@ -1,57 +1,64 @@
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
 // const functions = require("firebase-functions");
 // import * as admin from 'firebase-admin';
 
 import { v4 as uuidv4 } from 'uuid';
 
 const Rave = require('./Rave');
-const { FWPubKey, FWSecret, jumgaLogo} = require("../helpers/config");
+const { FWPubKey, FWSecret, jumgaLogo, storePrice, webhook, currency } = require("../helpers/config");
 
-const getRemoteConfig = async () => {
-  const config = admin.remoteConfig();
-  return await config.getTemplate();
-}
+// TODO: Retrieve cost and currency using remoteConfig
+// const getRemoteConfig = async () => {
+//   const config = admin.remoteConfig();
+//   return await config.getTemplate();
+// }
 
-const processPayment = functions.https.onRequest(async (req: functions.Request, res: functions.Response <any>) => {
+const processPayment = functions.https.onCall(async (data, context) => {
 
-  // if (!context.auth) {
-  //   return { message: "Authentication Required!", code: 401 };
-  // }
-  const data = req?.body;
-  const remoteConfig = await getRemoteConfig();
-  res.status(200).json(remoteConfig);
-  return;
+  if (!context.auth) {
+    throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+      'while authenticated.');
+  }
+
   const paymentDetails = data;
   console.log("Inspecting data object within processPayment method: ", paymentDetails);
   const rave = new Rave(FWPubKey, FWSecret);
 
-  return rave.initiatePayment({
-    tx_ref: uuidv4(),
-    amount: 20,
-    redirect_url: "https://webhook.site/43328766-3fe9-40f8-a981-c84189c18f61",
-    currency: 'USD',
-    payment_options: 'card',
-    customer: {
-      email: paymentDetails?.email,
-      name: paymentDetails?.name
-    },
-    customization: {
-      title: paymentDetails?.paymentTitle,
-      description: paymentDetails?.description,
-      logo: jumgaLogo,
+  try {
+    const paymentOptions = {
+      tx_ref: uuidv4(),
+      amount: storePrice,
+      redirect_url: webhook,
+      currency: currency,
+      payment_options: 'card',
+      customer: {
+        email: paymentDetails?.email,
+        name: paymentDetails?.name,
+        store_id: paymentDetails?.storename,
+      },
+      customization: {
+        title: paymentDetails?.paymentTitle,
+        description: paymentDetails?.description,
+        logo: jumgaLogo,
+      },
+    };
+
+    if (paymentDetails?.payment_plan) {
+      paymentOptions['payment_plan'] = paymentDetails?.payment_plan;
     }
-  }).then((result) => {
+
+    if (paymentDetails?.productId) {
+      paymentOptions.customer['product_id'] = paymentDetails?.productId;
+    }
+
+    const result = await rave.initiatePayment(paymentOptions);
+
     console.log("response from successful payment == ", result);
-    res.status(200).json(result);
     return result;
-  })
-  .catch((error) => {
+  } catch(error) {
     console.log("error occured while attempting to process payment: ", error);
-    res.status(404).json(error);
     throw new functions.https.HttpsError('unknown', error.message, error);
-    return error;
-  });
+  }
 
 });
 
