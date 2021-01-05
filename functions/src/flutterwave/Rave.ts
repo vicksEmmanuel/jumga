@@ -1,9 +1,10 @@
 import forge from 'node-forge';
 import md5 from 'md5';
 import axios from 'axios';
+import * as _ from 'lodash';
 
 
-const { raveEndpoint } = require("../helpers/config");
+const { raveEndpoint, currency, storePrice} = require("../helpers/config");
 
 export interface Customers {
   email:string,
@@ -52,6 +53,36 @@ class Rave {
     const seckeyadjustedfirst12 = seckeyadjusted.substr(0, 12);
 
     return seckeyadjustedfirst12 + keymd5last12;
+  }
+
+  async getPriceAndCurrency(newCurrency, currencyPricePerDollar){
+    try {
+      if (newCurrency === currency) {
+        return {
+          storeCost: storePrice,
+          currency: newCurrency
+        }
+      }
+      // const newExchange = await axios.get(`https://free.currconv.com/api/v7/convert?q=${currency}_${newCurrency}&compact=ultra&apiKey=${currencyExchangeApiKey}`, {
+      //   headers: {
+      //     'Content-Type': 'application/json; charset=utf-8',
+      //     'Access-Control-Allow-Origin': '*',
+      //     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+      //   }
+      // });
+      // console.log(newExchange.data);
+      // if(_.isEmpty(newExchange.data)) throw new Error('Something went wrong with currency exchange');
+      // const x = Object.keys(newExchange.data).map(i => {
+      //     return newExchange.data[i];
+      // });  
+      return {
+          storeCost: currencyPricePerDollar * storePrice,
+          currency: newCurrency
+      };
+    } catch(err) {
+      console.log(err);
+      throw new Error("Exchange rate error");
+    }
   }
 
   initiatePayment(paymentDetails: {
