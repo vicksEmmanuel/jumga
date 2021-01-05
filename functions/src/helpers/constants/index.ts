@@ -41,5 +41,15 @@ module.exports = {
   environment: (isProduction) ? "production" : "staging",
   auth,
   admin,
-  _
+  _,
+  DATABASE: {
+    USER: 'users',
+    CATEGORY: 'categories',
+    STORE: 'stores',
+    PAYMENTHOLDER: 'paymentHolder'
+  },
+  PAYMENTTYPE: {
+    STORE: 'STORE',
+    PRODUCT: 'PRODUCT'
+  }
 };
