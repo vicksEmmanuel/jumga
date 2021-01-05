@@ -5,7 +5,7 @@ const functions = require("firebase-functions");
 // import * as admin from 'firebase-admin';
 const uuid_1 = require("uuid");
 const Rave = require('./Rave');
-const { FWPubKey, FWSecret, jumgaLogo, storePrice, webhook, currency } = require("../helpers/config");
+const { FWPubKey, FWSecret, jumgaLogo, webhook } = require("../helpers/config");
 // TODO: Retrieve cost and currency using remoteConfig
 // const getRemoteConfig = async () => {
 //   const config = admin.remoteConfig();
@@ -20,12 +20,13 @@ const processPayment = functions.https.onCall(async (data, context) => {
     console.log("Inspecting data object within processPayment method: ", paymentDetails);
     const rave = new Rave(FWPubKey, FWSecret);
     try {
+        const pricey = await rave.getPriceAndCurrency(paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.currency, paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.currencyPricePerDollar);
         const paymentOptions = {
             tx_ref: uuid_1.v4(),
-            amount: storePrice,
+            amount: pricey.storeCost,
             redirect_url: webhook,
-            currency: currency,
-            payment_options: 'card',
+            currency: pricey.currency,
+            payment_options: 'card, account, banktransfer',
             customer: {
                 email: paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.email,
                 name: paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.name,

@@ -25,7 +25,7 @@ const CONFIG = (isProduction) ?
   FWSecret: "FLWSECK-8029f4652f4a232a4977cffad94a1714-X",
   EncryptionKey: "8029f4652f4aa1503a5e5cb8",
   jumgaLogo: 'https://firebasestorage.googleapis.com/v0/b/jumga-production.appspot.com/o/jumga%20logo.png?alt=media&token=64deb6de-0897-4df4-94f6-4ca81abd5e0b',
-  webhook: "https://webhook.site/43328766-3fe9-40f8-a981-c84189c18f61"
+  webhook: "https://us-central1-jumga-production.cloudfunctions.net/flutterwaveAcceptPayment"
 }
 :
 {
@@ -41,7 +41,7 @@ const CONFIG = (isProduction) ?
   raveEndpoint: "https://api.flutterwave.com/v3/payments",
   EncryptionKey: "f2a0b0a192c6ee76d1071e80",
   jumgaLogo: 'https://firebasestorage.googleapis.com/v0/b/jumga-staging.appspot.com/o/jumga%20logo.png?alt=media&token=9ae55924-7d87-408c-82d3-7cf8c1a26859',
-  webhook: "https://webhook.site/43328766-3fe9-40f8-a981-c84189c18f61"
+  webhook: "https://us-central1-jumga-staging.cloudfunctions.net/flutterwaveAcceptPayment"
 }
 
 
@@ -70,7 +70,9 @@ module.exports = {
   EncryptionKey: CONFIG.EncryptionKey,
   jumgaHashKey: 'jumgaparadoxyconfig2021',
   jumgaLogo: CONFIG.jumgaLogo,
-  storePrice: 20,
+  storePrice: 1,
   currency: 'USD',
-  webhook: CONFIG.webhook
+  webhook: CONFIG.webhook,
+  geolocationRoute: 'http://ip-api.com/json?fields=status,country,currency,message',
+  currencyExchangeApiKey: '68c0bd7b7292adeefe56'
 };

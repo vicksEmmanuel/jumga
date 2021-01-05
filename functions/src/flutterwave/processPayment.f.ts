@@ -5,7 +5,7 @@ import * as functions from 'firebase-functions';
 import { v4 as uuidv4 } from 'uuid';
 
 const Rave = require('./Rave');
-const { FWPubKey, FWSecret, jumgaLogo, storePrice, webhook, currency } = require("../helpers/config");
+const { FWPubKey, FWSecret, jumgaLogo, webhook } = require("../helpers/config");
 
 // TODO: Retrieve cost and currency using remoteConfig
 // const getRemoteConfig = async () => {
@@ -25,12 +25,13 @@ const processPayment = functions.https.onCall(async (data, context) => {
   const rave = new Rave(FWPubKey, FWSecret);
 
   try {
+    const pricey = await rave.getPriceAndCurrency(paymentDetails?.currency, paymentDetails?.currencyPricePerDollar);
     const paymentOptions = {
       tx_ref: uuidv4(),
-      amount: storePrice,
+      amount: pricey.storeCost,
       redirect_url: webhook,
-      currency: currency,
-      payment_options: 'card',
+      currency: pricey.currency,
+      payment_options: 'card, account, banktransfer',
       customer: {
         email: paymentDetails?.email,
         name: paymentDetails?.name,
@@ -49,6 +50,7 @@ const processPayment = functions.https.onCall(async (data, context) => {
 
     if (paymentDetails?.productId) {
       paymentOptions.customer['product_id'] = paymentDetails?.productId;
+      //TODO: Find price of item add it to paymentOptions.amount
     }
 
     const result = await rave.initiatePayment(paymentOptions);
