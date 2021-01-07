@@ -33,23 +33,39 @@ const onSearch = functions.https.onCall(async (dataX, context) => {
 
     queryData?.forEach(doc => {
         const data = doc.data();
-        const categories = data?.categories as Array<string>
-        const newCategories = categories.map(i => String(i).toLowerCase());
+        const manufactureName = data?.manufacturename as string;
         const productName = data.productname as string;
-        const storeId = data.storeId as string;
+        const categories = data.categories.map(i => String(i).toLowerCase()).toString();
         const searchString = String(searchProps.searchId).toLowerCase();
+
         if (searchProps.filter) {
             if (
                 (data.starRating <= searchProps.filterCustomerRating) && //Chec customer ratings
                 //TODO: Discount Rating 
                 ((data.currentprice <= searchProps.filterPriceMaxRange) && (searchProps.filterPriceMinRange <= data.currentprice)) &&
-                (newCategories.includes(searchProps.searchId) || !_.isNull(productName.toLowerCase().match(searchString)) || !_.isNull(storeId.toLowerCase().search(searchString)))
+
+                (
+
+                    manufactureName.toLowerCase().match(searchString) !== null || 
+                    productName.toLowerCase().match(searchString) !== null ||
+                    categories.match(searchString) !== null
+                )
             ) {
-                result.push(data);
+                result.push({
+                    ...data,
+                    productId: doc.id
+                });
             }
         } else {
-            if (newCategories.includes(searchProps.searchId) || productName.toLowerCase().search(searchString) >= 3 || storeId.toLowerCase().search(searchString) >= 3) {
-                result.push(data);
+            if  (
+                manufactureName.toLowerCase().match(searchString) !== null || 
+                productName.toLowerCase().match(searchString) !== null ||
+                categories.match(searchString) !== null
+            )   {
+                result.push({
+                    ...data,
+                    productId: doc.id
+                });
             }
         }
     });

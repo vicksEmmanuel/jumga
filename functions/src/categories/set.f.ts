@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as _ from "lodash";
 import {firestore} from "firebase-admin";
+const {DATABASE} = require("../helpers/constants");
 
 
 const onSetProductCategories = functions.https.onRequest(async (req: functions.Request, res: functions.Response <any>) => {
@@ -20,7 +21,7 @@ const onSetProductCategories = functions.https.onRequest(async (req: functions.R
       }
     
     const db = firestore();
-    const categoriesDB = db.collection('categories');
+    const categoriesDB = db.collection(DATABASE.CATEGORY);
 
     console.log("Categories provided == ", categories);
 
@@ -41,7 +42,7 @@ const onSetProductCategories = functions.https.onRequest(async (req: functions.R
             )
         });
 
-        res.status(401).json({
+        res.status(200).json({
             message: 'Categories set. Yay!!'
         });
 

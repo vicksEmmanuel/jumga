@@ -48,6 +48,7 @@ module.exports = {
     STORE: 'stores',
     PAYMENTHOLDER: 'paymentHolder',
     PRODUCT: 'products',
+    RIDERS: 'dispatchRiders'
   },
   PAYMENTTYPE: {
     STORE: 'STORE',

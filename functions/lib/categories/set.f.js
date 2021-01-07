@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const _ = require("lodash");
 const firebase_admin_1 = require("firebase-admin");
+const { DATABASE } = require("../helpers/constants");
 const onSetProductCategories = functions.https.onRequest(async (req, res) => {
     /**
      * TODO: Make this route accessible to admins
@@ -17,7 +18,7 @@ const onSetProductCategories = functions.https.onRequest(async (req, res) => {
         });
     };
     const db = firebase_admin_1.firestore();
-    const categoriesDB = db.collection('categories');
+    const categoriesDB = db.collection(DATABASE.CATEGORY);
     console.log("Categories provided == ", categories);
     try {
         if (_.isEmpty(categories)) {
@@ -31,7 +32,7 @@ const onSetProductCategories = functions.https.onRequest(async (req, res) => {
                 t.set(docRef, Object.assign({}, categories[el]));
             }));
         });
-        res.status(401).json({
+        res.status(200).json({
             message: 'Categories set. Yay!!'
         });
     }

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const firebase_admin_1 = require("firebase-admin");
-const _ = require("lodash");
 const { DATABASE } = require("../helpers/constants");
 const onSearch = functions.https.onCall(async (dataX, context) => {
     const searchDetails = dataX;
@@ -26,22 +25,25 @@ const onSearch = functions.https.onCall(async (dataX, context) => {
         const result = [];
         queryData === null || queryData === void 0 ? void 0 : queryData.forEach(doc => {
             const data = doc.data();
-            const categories = data === null || data === void 0 ? void 0 : data.categories;
-            const newCategories = categories.map(i => String(i).toLowerCase());
+            const manufactureName = data === null || data === void 0 ? void 0 : data.manufacturename;
             const productName = data.productname;
-            const storeId = data.storeId;
+            const categories = data.categories.map(i => String(i).toLowerCase()).toString();
             const searchString = String(searchProps.searchId).toLowerCase();
             if (searchProps.filter) {
                 if ((data.starRating <= searchProps.filterCustomerRating) && //Chec customer ratings
                     //TODO: Discount Rating 
                     ((data.currentprice <= searchProps.filterPriceMaxRange) && (searchProps.filterPriceMinRange <= data.currentprice)) &&
-                    (newCategories.includes(searchProps.searchId) || !_.isNull(productName.toLowerCase().match(searchString)) || !_.isNull(storeId.toLowerCase().search(searchString)))) {
-                    result.push(data);
+                    (manufactureName.toLowerCase().match(searchString) !== null ||
+                        productName.toLowerCase().match(searchString) !== null ||
+                        categories.match(searchString) !== null)) {
+                    result.push(Object.assign(Object.assign({}, data), { productId: doc.id }));
                 }
             }
             else {
-                if (newCategories.includes(searchProps.searchId) || productName.toLowerCase().search(searchString) >= 3 || storeId.toLowerCase().search(searchString) >= 3) {
-                    result.push(data);
+                if (manufactureName.toLowerCase().match(searchString) !== null ||
+                    productName.toLowerCase().match(searchString) !== null ||
+                    categories.match(searchString) !== null) {
+                    result.push(Object.assign(Object.assign({}, data), { productId: doc.id }));
                 }
             }
         });
