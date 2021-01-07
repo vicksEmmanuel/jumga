@@ -25,7 +25,7 @@ const CONFIG = (isProduction) ?
   FWSecret: "FLWSECK-8029f4652f4a232a4977cffad94a1714-X",
   EncryptionKey: "8029f4652f4aa1503a5e5cb8",
   jumgaLogo: 'https://firebasestorage.googleapis.com/v0/b/jumga-production.appspot.com/o/jumga%20logo.png?alt=media&token=64deb6de-0897-4df4-94f6-4ca81abd5e0b',
-  webhook: "https://us-central1-jumga-production.cloudfunctions.net/flutterwaveAcceptPayment"
+  webhook: "https://jumga-store.web.app/payment/close"
 }
 :
 {
@@ -41,7 +41,7 @@ const CONFIG = (isProduction) ?
   raveEndpoint: "https://api.flutterwave.com/v3/payments",
   EncryptionKey: "f2a0b0a192c6ee76d1071e80",
   jumgaLogo: 'https://firebasestorage.googleapis.com/v0/b/jumga-staging.appspot.com/o/jumga%20logo.png?alt=media&token=9ae55924-7d87-408c-82d3-7cf8c1a26859',
-  webhook: "http://localhost:3000/payment/close"
+  webhook: "https://jumga-store.web.app/payment/close"
 }
 
 

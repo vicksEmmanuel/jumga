@@ -46,7 +46,8 @@ module.exports = {
     USER: 'users',
     CATEGORY: 'categories',
     STORE: 'stores',
-    PAYMENTHOLDER: 'paymentHolder'
+    PAYMENTHOLDER: 'paymentHolder',
+    PRODUCT: 'products',
   },
   PAYMENTTYPE: {
     STORE: 'STORE',
