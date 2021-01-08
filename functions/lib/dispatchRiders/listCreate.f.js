@@ -19,8 +19,6 @@ const onCreateDispatchRiders = functions.https.onRequest(async (req, res) => {
         });
     };
     const db = firebase_admin_1.firestore();
-    const key = uuid_1.v4();
-    const dispatchRiderDB = db.doc(`${DATABASE.RIDERS}/${key}`);
     const batch = db.batch();
     console.log("Categories provided == ", dispatchRider);
     try {
@@ -28,9 +26,11 @@ const onCreateDispatchRiders = functions.https.onRequest(async (req, res) => {
             errorMessage();
             return;
         }
-        await Promise.all(dispatchRider.map(async (item) => {
-            await batch.set(dispatchRiderDB, dispatchRider);
-        }));
+        dispatchRider.map((item) => {
+            const key = uuid_1.v4();
+            const dispatchRiderDB = db.doc(`${DATABASE.RIDERS}/${key}`);
+            batch.set(dispatchRiderDB, item);
+        });
         await batch.commit();
         res.status(200).json({
             message: 'Dispatch Rider Created. Yay!!'

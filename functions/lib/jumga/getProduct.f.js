@@ -20,7 +20,9 @@ const getProduct = functions.https.onCall(async (data, context) => {
         const x = () => {
             const tmp = [];
             queryData.forEach(t => {
-                tmp.push(Object.assign(Object.assign({}, t.data()), { productId: t.id }));
+                if (t.id !== productId) {
+                    tmp.push(Object.assign(Object.assign({}, t.data()), { productId: t.id }));
+                }
             });
             return tmp;
         };

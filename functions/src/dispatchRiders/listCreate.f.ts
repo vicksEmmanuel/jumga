@@ -16,6 +16,10 @@ export interface DispatchRIder {
     state: string
   }
 
+  export interface DipatchRiderArray {
+      [index: number]: DispatchRIder
+  }
+
 const onCreateDispatchRiders = functions.https.onRequest(async (req: functions.Request, res: functions.Response <any>) => {
 
     /**
@@ -23,7 +27,7 @@ const onCreateDispatchRiders = functions.https.onRequest(async (req: functions.R
      */
 
     const body = req?.body;
-    const dispatchRider = body?.dispatchRider as Array<DispatchRIder>;
+    const dispatchRider = body?.dispatchRider as Array<DipatchRiderArray>;
     const errorMessage = () => {
         res.status(401).json({
           success: false,
@@ -33,8 +37,6 @@ const onCreateDispatchRiders = functions.https.onRequest(async (req: functions.R
       }
     
     const db = firestore();
-    const key = uuidv4();
-    const dispatchRiderDB = db.doc(`${DATABASE.RIDERS}/${key}`);
     const batch = db.batch();
 
     console.log("Categories provided == ", dispatchRider);
@@ -46,9 +48,11 @@ const onCreateDispatchRiders = functions.https.onRequest(async (req: functions.R
             return;
         }
 
-        await Promise.all(dispatchRider.map(async (item) => {
-            await batch.set(dispatchRiderDB,dispatchRider);
-        }));
+        dispatchRider.map((item) => {
+            const key = uuidv4();
+            const dispatchRiderDB = db.doc(`${DATABASE.RIDERS}/${key}`);
+            batch.set(dispatchRiderDB,item);
+        });
 
         await batch.commit();
 

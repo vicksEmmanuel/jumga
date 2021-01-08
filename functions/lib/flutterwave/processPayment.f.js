@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const firebase_admin_1 = require("firebase-admin");
+const moment = require('moment');
 // const functions = require("firebase-functions");
 // import * as admin from 'firebase-admin';
 const uuid_1 = require("uuid");
@@ -58,7 +59,7 @@ const processPayment = functions.https.onCall(async (data, context) => {
             type: PAYMENTTYPE.STORE,
             storeId: paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.storename,
             paid: false,
-            createdDate: Date.now()
+            createdDate: firebase_admin_1.firestore.Timestamp.fromDate(moment().toDate()),
         });
         console.log("response from successful payment == ", result);
         return result;

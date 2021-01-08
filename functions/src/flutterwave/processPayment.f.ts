@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import {firestore} from "firebase-admin";
+const moment = require('moment');
 // const functions = require("firebase-functions");
 // import * as admin from 'firebase-admin';
 
@@ -68,7 +69,7 @@ const processPayment = functions.https.onCall(async (data, context) => {
       type: PAYMENTTYPE.STORE,
       storeId: paymentDetails?.storename,
       paid: false,
-      createdDate: Date.now()
+      createdDate: firestore.Timestamp.fromDate(moment().toDate()),
     });
 
     console.log("response from successful payment == ", result);
