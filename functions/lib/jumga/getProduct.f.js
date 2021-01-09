@@ -27,7 +27,7 @@ const getProduct = functions.https.onCall(async (data, context) => {
             return tmp;
         };
         const result = {
-            product: doc.data(),
+            product: Object.assign(Object.assign({}, doc.data()), { productId: doc.id }),
             extraProductFromStore: queryData.empty ? [] : x()
         };
         console.log("response from successful payment == ", result);

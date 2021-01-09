@@ -37,7 +37,7 @@ const getProduct = functions.https.onCall(async (data, context) => {
     }
 
     const result = {
-      product: doc.data(),
+      product: {...doc.data(), productId: doc.id},
       extraProductFromStore: queryData.empty ? [] : x()
     };
 
