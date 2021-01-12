@@ -16,7 +16,7 @@ const onSearch = functions.https.onCall(async (dataX, context) => {
         filter: searchDetails?.filter || true as boolean,
         filterPriceMinRange: searchDetails?.filterPriceMinRange || 0 as number,
         filterPriceMaxRange: searchDetails?.filterPriceMaxRange || 1000000000 as number,
-        filterDiscountRate: searchDetails?.filterDiscountRate || 50 as number,
+        filterDiscountRate: searchDetails?.filterDiscountRate || 90 as number,
         filterCustomerRating: searchDetails?.filterCustomerRating || 5 as number,
         startAt: searchDetails?.startAt || 0 as number,
         limit: searchDetails?.limit || 10 as number,
@@ -69,10 +69,6 @@ const onSearch = functions.https.onCall(async (dataX, context) => {
             }
         }
     });
-
-    console.log(result);
-
-
 
     const random100Array = {
         totalSize: result.length,
