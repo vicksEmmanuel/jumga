@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import {firestore} from "firebase-admin";
+import * as _ from 'lodash';
 const moment = require('moment');
 // const functions = require("firebase-functions");
 // import * as admin from 'firebase-admin';
@@ -16,8 +17,48 @@ const {DATABASE, PAYMENTTYPE} = require("../helpers/constants");
 //   return await config.getTemplate();
 // }
 
-const getCartPriceBasedOnUser = async (email) => {
-  return 0;
+export const getCartPriceBasedOnUser = async (email) => {
+  const doc = firestore().collection(DATABASE.CART);
+  const docRef = doc.where('email', '==', email);
+  const docData = await docRef.get();
+
+  if (docData.empty) throw new Error("Something went wrong");
+
+  const cart = [];
+  docData.forEach(i => {
+    const check = cart.filter(item => {
+        return item.productId === i.data()?.productId
+    });
+  if (!(check.length > 0)) cart.push({...i.data(), id: i.id});
+  });
+
+  if (_.isEmpty(cart)) throw new Error("Something went wrong");
+
+  const total = getTotal(cart);
+
+  return total;
+}
+
+export const getAddUpValues = (cart) => {
+  let x = 0;
+  cart.forEach(item => {
+      x += Number(item?.total);
+  });
+  return x;
+}
+
+export const getTotal = (cart) => {
+  const discount = getDeliveryCost(cart);
+  const totalprice = getAddUpValues(cart);
+  return Number(discount) + Number(totalprice);
+}
+
+export const getDeliveryCost = (cart) => {
+  let delivery = 0;
+  cart.forEach(item => {
+      delivery += (Number(item?.deliverycost) * item?.quantity);
+  })
+  return delivery;
 }
 
 
@@ -79,7 +120,7 @@ const processPayment = functions.https.onCall(async (data, context) => {
       paymentRef: reference,
       email: paymentDetails?.email,
       paid: false,
-      storeId: paymentDetails?.storename,
+      storeId: paymentDetails?.storename || null,
       amount: paymentOptions?.amount,
       type: paymentOptions?.type,
       createdDate: firestore.Timestamp.fromDate(moment().toDate()),

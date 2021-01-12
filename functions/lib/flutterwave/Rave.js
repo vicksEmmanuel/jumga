@@ -31,11 +31,29 @@ class Rave {
         const seckeyadjustedfirst12 = seckeyadjusted.substr(0, 12);
         return seckeyadjustedfirst12 + keymd5last12;
     }
+    async getTotalCostOfCart(newCurrency, currencyPricePerDollar, valuePrice) {
+        try {
+            if (newCurrency === currency) {
+                return {
+                    cost: valuePrice,
+                    currency: newCurrency
+                };
+            }
+            return {
+                cost: currencyPricePerDollar * Number(valuePrice),
+                currency: newCurrency
+            };
+        }
+        catch (e) {
+            console.log("Error in Rave class == ", e);
+            throw new Error(`Exchange rate error ${e === null || e === void 0 ? void 0 : e.message}`);
+        }
+    }
     async getPriceAndCurrency(newCurrency, currencyPricePerDollar) {
         try {
             if (newCurrency === currency) {
                 return {
-                    storeCost: storePrice,
+                    cost: storePrice,
                     currency: newCurrency
                 };
             }
@@ -52,7 +70,7 @@ class Rave {
             //     return newExchange.data[i];
             // });  
             return {
-                storeCost: currencyPricePerDollar * storePrice,
+                cost: currencyPricePerDollar * storePrice,
                 currency: newCurrency
             };
         }
