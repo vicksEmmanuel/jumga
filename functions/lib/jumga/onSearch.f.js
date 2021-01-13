@@ -12,7 +12,7 @@ const onSearch = functions.https.onCall(async (dataX, context) => {
             filter: (searchDetails === null || searchDetails === void 0 ? void 0 : searchDetails.filter) || true,
             filterPriceMinRange: (searchDetails === null || searchDetails === void 0 ? void 0 : searchDetails.filterPriceMinRange) || 0,
             filterPriceMaxRange: (searchDetails === null || searchDetails === void 0 ? void 0 : searchDetails.filterPriceMaxRange) || 1000000000,
-            filterDiscountRate: (searchDetails === null || searchDetails === void 0 ? void 0 : searchDetails.filterDiscountRate) || 50,
+            filterDiscountRate: (searchDetails === null || searchDetails === void 0 ? void 0 : searchDetails.filterDiscountRate) || 90,
             filterCustomerRating: (searchDetails === null || searchDetails === void 0 ? void 0 : searchDetails.filterCustomerRating) || 5,
             startAt: (searchDetails === null || searchDetails === void 0 ? void 0 : searchDetails.startAt) || 0,
             limit: (searchDetails === null || searchDetails === void 0 ? void 0 : searchDetails.limit) || 10,
@@ -47,7 +47,6 @@ const onSearch = functions.https.onCall(async (dataX, context) => {
                 }
             }
         });
-        console.log(result);
         const random100Array = {
             totalSize: result.length,
             data: result.splice(searchProps.startAt, result.length <= searchProps.limit ? result.length : searchProps.limit),

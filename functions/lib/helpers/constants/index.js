@@ -45,7 +45,9 @@ module.exports = {
         PAYMENTHOLDER: 'paymentHolder',
         PRODUCT: 'products',
         RIDERS: 'dispatchRiders',
-        CART: 'carts'
+        CART: 'carts',
+        ORDER: 'orders',
+        JUMGA: 'jumga'
     },
     PAYMENTTYPE: {
         STORE: 'STORE',

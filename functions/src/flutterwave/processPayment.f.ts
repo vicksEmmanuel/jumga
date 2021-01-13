@@ -26,10 +26,7 @@ export const getCartPriceBasedOnUser = async (email) => {
 
   const cart = [];
   docData.forEach(i => {
-    const check = cart.filter(item => {
-        return item.productId === i.data()?.productId
-    });
-  if (!(check.length > 0)) cart.push({...i.data(), id: i.id});
+    cart.push({...i.data(), id: i.id});
   });
 
   if (_.isEmpty(cart)) throw new Error("Something went wrong");
@@ -118,9 +115,14 @@ const processPayment = functions.https.onCall(async (data, context) => {
 
     await paymentHolderDB.set({
       paymentRef: reference,
-      email: paymentDetails?.email,
       paid: false,
       storeId: paymentDetails?.storename || null,
+      email: paymentDetails?.email ||  null,
+      phone: paymentDetails?.phone || null,
+      address: paymentDetails?.address || null,
+      country: paymentDetails.country || null,
+      state: paymentDetails?.state || null,
+      note: paymentDetails?.note || null,
       amount: paymentOptions?.amount,
       type: paymentOptions?.type,
       createdDate: firestore.Timestamp.fromDate(moment().toDate()),

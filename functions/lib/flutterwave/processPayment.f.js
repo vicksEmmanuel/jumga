@@ -24,12 +24,7 @@ exports.getCartPriceBasedOnUser = async (email) => {
         throw new Error("Something went wrong");
     const cart = [];
     docData.forEach(i => {
-        const check = cart.filter(item => {
-            var _a;
-            return item.productId === ((_a = i.data()) === null || _a === void 0 ? void 0 : _a.productId);
-        });
-        if (!(check.length > 0))
-            cart.push(Object.assign(Object.assign({}, i.data()), { id: i.id }));
+        cart.push(Object.assign(Object.assign({}, i.data()), { id: i.id }));
     });
     if (_.isEmpty(cart))
         throw new Error("Something went wrong");
@@ -103,9 +98,14 @@ const processPayment = functions.https.onCall(async (data, context) => {
         const paymentHolderDB = db.doc(`${DATABASE.PAYMENTHOLDER}/${reference}`);
         await paymentHolderDB.set({
             paymentRef: reference,
-            email: paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.email,
             paid: false,
             storeId: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.storename) || null,
+            email: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.email) || null,
+            phone: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.phone) || null,
+            address: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.address) || null,
+            country: paymentDetails.country || null,
+            state: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.state) || null,
+            note: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.note) || null,
             amount: paymentOptions === null || paymentOptions === void 0 ? void 0 : paymentOptions.amount,
             type: paymentOptions === null || paymentOptions === void 0 ? void 0 : paymentOptions.type,
             createdDate: firebase_admin_1.firestore.Timestamp.fromDate(moment().toDate()),

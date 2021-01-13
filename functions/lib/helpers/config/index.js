@@ -64,6 +64,8 @@ module.exports = {
     currency: 'USD',
     webhook: CONFIG.webhook,
     geolocationRoute: 'http://ip-api.com/json?fields=status,country,currency,message',
-    currencyExchangeApiKey: '68c0bd7b7292adeefe56'
+    currencyExchangeApiKey: '68c0bd7b7292adeefe56',
+    deliveryComissionPercentage: 0.2,
+    salesCommissionPercentage: 0.025,
 };
 //# sourceMappingURL=index.js.map

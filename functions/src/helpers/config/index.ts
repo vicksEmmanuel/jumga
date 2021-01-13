@@ -70,9 +70,11 @@ module.exports = {
   EncryptionKey: CONFIG.EncryptionKey,
   jumgaHashKey: 'jumgaparadoxyconfig2021',
   jumgaLogo: CONFIG.jumgaLogo,
-  storePrice: 0.04,
+  storePrice: 0.04, //TODO: Change to 20
   currency: 'USD',
   webhook: CONFIG.webhook,
   geolocationRoute: 'http://ip-api.com/json?fields=status,country,currency,message',
-  currencyExchangeApiKey: '68c0bd7b7292adeefe56'
+  currencyExchangeApiKey: '68c0bd7b7292adeefe56',
+  deliveryComissionPercentage: 0.2, //20% commission on deliverycost
+  salesCommissionPercentage: 0.025, //2.5% commission per item
 };
