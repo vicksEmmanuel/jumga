@@ -145,7 +145,7 @@ app.post('/', async (req, res) => {
 
                   await Promise.all(cartHolder.map(async (item) => {
                     //update store pending wallet
-                    const storeDB = db.doc(`${DATABASE.STORE}/${item?.storeId}`)
+                    const storeDB = db.doc(`${DATABASE.STORE}/${item?.storeId}`);
                     const storeDBRef =  await t.get(storeDB);
 
                     //create an order                   
