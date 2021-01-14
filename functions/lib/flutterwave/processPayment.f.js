@@ -96,19 +96,27 @@ const processPayment = functions.https.onCall(async (data, context) => {
         const result = await rave.initiatePayment(paymentOptions);
         const db = firebase_admin_1.firestore();
         const paymentHolderDB = db.doc(`${DATABASE.PAYMENTHOLDER}/${reference}`);
-        await paymentHolderDB.set({
-            paymentRef: reference,
-            paid: false,
-            storeId: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.storename) || null,
-            email: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.email) || null,
-            phone: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.phone) || null,
-            address: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.address) || null,
-            country: paymentDetails.country || null,
-            state: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.state) || null,
-            note: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.note) || null,
-            amount: paymentOptions === null || paymentOptions === void 0 ? void 0 : paymentOptions.amount,
-            type: paymentOptions === null || paymentOptions === void 0 ? void 0 : paymentOptions.type,
-            createdDate: firebase_admin_1.firestore.Timestamp.fromDate(moment().toDate()),
+        const paymentHolderRef = db.collection(DATABASE.PAYMENTHOLDER);
+        const queryRef = paymentHolderRef.where('email', '==', paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.email);
+        await db.runTransaction(async (t) => {
+            const allRefs = await t.get(queryRef);
+            (await allRefs).forEach(async (doc) => {
+                await t.delete(doc.ref);
+            });
+            await t.set(paymentHolderDB, {
+                paymentRef: reference,
+                paid: false,
+                storeId: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.storename) || null,
+                email: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.email) || null,
+                phone: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.phone) || null,
+                address: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.address) || null,
+                country: paymentDetails.country || null,
+                state: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.state) || null,
+                note: (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails.note) || null,
+                amount: paymentOptions === null || paymentOptions === void 0 ? void 0 : paymentOptions.amount,
+                type: paymentOptions === null || paymentOptions === void 0 ? void 0 : paymentOptions.type,
+                createdDate: firebase_admin_1.firestore.Timestamp.fromDate(moment().toDate()),
+            });
         });
         console.log("response from successful payment == ", result);
         return Object.assign(Object.assign({}, result), { reference });

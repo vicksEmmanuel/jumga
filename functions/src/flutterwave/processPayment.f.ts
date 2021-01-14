@@ -113,19 +113,29 @@ const processPayment = functions.https.onCall(async (data, context) => {
     const db = firestore();
     const paymentHolderDB = db.doc(`${DATABASE.PAYMENTHOLDER}/${reference}`);
 
-    await paymentHolderDB.set({
-      paymentRef: reference,
-      paid: false,
-      storeId: paymentDetails?.storename || null,
-      email: paymentDetails?.email ||  null,
-      phone: paymentDetails?.phone || null,
-      address: paymentDetails?.address || null,
-      country: paymentDetails.country || null,
-      state: paymentDetails?.state || null,
-      note: paymentDetails?.note || null,
-      amount: paymentOptions?.amount,
-      type: paymentOptions?.type,
-      createdDate: firestore.Timestamp.fromDate(moment().toDate()),
+    const paymentHolderRef = db.collection(DATABASE.PAYMENTHOLDER);
+    const queryRef = paymentHolderRef.where('email', '==', paymentDetails?.email);
+
+    await db.runTransaction(async (t) => {
+      const allRefs = await t.get(queryRef);
+      (await allRefs).forEach(async (doc) => {
+        await t.delete(doc.ref);
+      });
+
+      await t.set(paymentHolderDB,{
+        paymentRef: reference,
+        paid: false,
+        storeId: paymentDetails?.storename || null,
+        email: paymentDetails?.email ||  null,
+        phone: paymentDetails?.phone || null,
+        address: paymentDetails?.address || null,
+        country: paymentDetails.country || null,
+        state: paymentDetails?.state || null,
+        note: paymentDetails?.note || null,
+        amount: paymentOptions?.amount,
+        type: paymentOptions?.type,
+        createdDate: firestore.Timestamp.fromDate(moment().toDate()),
+      });
     });
 
     console.log("response from successful payment == ", result);
