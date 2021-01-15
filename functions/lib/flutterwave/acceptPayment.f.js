@@ -92,7 +92,7 @@ app.post('/', async (req, res) => {
                                             country: data.country || null,
                                             state: (data === null || data === void 0 ? void 0 : data.state) || null,
                                             note: (data === null || data === void 0 ? void 0 : data.note) || null,
-                                        }, isDelivered: false, status: 'not delivered', refunded: false, orderDate: firebase_admin_1.firestore.Timestamp.fromDate(moment().toDate()), paymentData: {
+                                        }, isDelivered: false, status: 'not delivered', isSentToDeliveryTeam: false, refunded: false, orderDate: firebase_admin_1.firestore.Timestamp.fromDate(moment().toDate()), paymentData: {
                                             amount: bodyX.amount,
                                             email: bodyX.customer.email,
                                             paymentTxRef: bodyX.tx_ref,

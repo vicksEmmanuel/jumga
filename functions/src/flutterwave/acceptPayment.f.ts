@@ -125,6 +125,7 @@ app.post('/', async (req, res) => {
                         },
                         isDelivered: false,
                         status: 'not delivered',
+                        isSentToDeliveryTeam: false,
                         refunded: false,
                         orderDate: firestore.Timestamp.fromDate(moment().toDate()),
                         paymentData: {
