@@ -6,7 +6,7 @@ const _ = require("lodash");
 // import * as moment from 'moment';
 const { DATABASE } = require("../helpers/constants");
 const userOnUpdate = functions.firestore.document(`${DATABASE.STORE}/{storeId}`).onWrite(async (change, context) => {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const isOnCreate = !((_a = change === null || change === void 0 ? void 0 : change.before) === null || _a === void 0 ? void 0 : _a.exists) && ((_b = change === null || change === void 0 ? void 0 : change.after) === null || _b === void 0 ? void 0 : _b.exists);
     const isOnUpdate = ((_c = change === null || change === void 0 ? void 0 : change.before) === null || _c === void 0 ? void 0 : _c.exists) && ((_d = change === null || change === void 0 ? void 0 : change.after) === null || _d === void 0 ? void 0 : _d.exists);
     console.log("isOnCreate == ", isOnCreate);
@@ -46,8 +46,16 @@ const userOnUpdate = functions.firestore.document(`${DATABASE.STORE}/{storeId}`)
                 }
                 const randomDispatchRider = _.sampleSize(allDispatchRiders, 1);
                 await db.doc(docPath).update({ dispatchRiders: randomDispatchRider[0].id });
+                const dispatchers = await db.doc(`${DATABASE.RIDERS}/${randomDispatchRider[0].id}`).get();
+                const numOfStores = ((_h = dispatchers.data()) === null || _h === void 0 ? void 0 : _h.numOfStores) + 1;
+                await db.doc(`${DATABASE.RIDERS}/${randomDispatchRider[0].id}`).update({ numOfStores });
             }
             else {
+                if (!_.isNull(oldData.dispatchRiders)) {
+                    const dispatchers = await db.doc(`${DATABASE.RIDERS}/${oldData.dispatchRiders}`).get();
+                    const numOfStores = ((_j = dispatchers.data()) === null || _j === void 0 ? void 0 : _j.numOfStores) - 1;
+                    await db.doc(`${DATABASE.RIDERS}/${oldData.dispatchRiders}`).update({ numOfStores });
+                }
                 await db.doc(docPath).update({ dispatchRiders: null });
             }
         }

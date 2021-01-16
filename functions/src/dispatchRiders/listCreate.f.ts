@@ -13,7 +13,10 @@ export interface DispatchRIder {
     phoneNumber: string,
     email: string,
     country: string,
-    state: string
+    state: string,
+    walletBalance: number,
+    withdrawals: number,
+    numOfStores: number
   }
 
   export interface DipatchRiderArray {

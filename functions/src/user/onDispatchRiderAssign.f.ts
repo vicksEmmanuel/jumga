@@ -64,8 +64,16 @@ const userOnUpdate = functions.firestore.document(`${DATABASE.STORE}/{storeId}`)
 
             const randomDispatchRider = _.sampleSize(allDispatchRiders, 1);
             await db.doc(docPath).update({ dispatchRiders: randomDispatchRider[0].id});
+            const dispatchers = await db.doc(`${DATABASE.RIDERS}/${randomDispatchRider[0].id}`).get();
+            const numOfStores = dispatchers.data()?.numOfStores + 1;
+            await db.doc(`${DATABASE.RIDERS}/${randomDispatchRider[0].id}`).update({numOfStores});
 
         } else {
+            if (!_.isNull(oldData.dispatchRiders)) {
+              const dispatchers = await db.doc(`${DATABASE.RIDERS}/${oldData.dispatchRiders}`).get();
+              const numOfStores = dispatchers.data()?.numOfStores - 1;
+              await db.doc(`${DATABASE.RIDERS}/${oldData.dispatchRiders}`).update({numOfStores});
+            }
             await db.doc(docPath).update({ dispatchRiders: null})
         }
     }
