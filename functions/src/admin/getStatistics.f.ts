@@ -122,15 +122,18 @@ const getOrderStat = async () => {
 const getRevenueStat = async () => {
     const revenueSnapshot = await retrieveAllDocumentsInCollction(DATABASE.JUMGA) as firestore.QuerySnapshot<firestore.DocumentData>;
     const revenuePerMonth = getYearTemplate();
+    const deliveryRevenuePerMonth = getYearTemplate();
 
     revenueSnapshot.forEach(doc => {
         const createdDate = new Date(doc.data().createdDate.toDate());
         const getYear = `${createdDate.getFullYear()}`;
-        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, revenuePerMonth, Number(doc.data()?.amount));
+        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, revenuePerMonth, Number(doc.data()?.commissionFromSales));
+        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, deliveryRevenuePerMonth, Number(doc.data()?.commissionFromDelivery));
     });
 
     return {
-        revenuePerMonth
+        revenuePerMonth,
+        deliveryRevenuePerMonth
     };
 }
 
@@ -139,15 +142,21 @@ const getStat = async () => {
   const totalRevenueSnapshot = await retrieveAllDocumentsInCollction(DATABASE.JUMGA) as firestore.QuerySnapshot<firestore.DocumentData>;
   const productsSnapshot = await retrieveAllDocumentsInCollction(DATABASE.PRODUCT) as firestore.QuerySnapshot<firestore.DocumentData>;
   let pendingRevenue = 0;
+  let pendingDeliveryRevenue = 0;
   let totalRevenue = 0;
+  let deliveryWalletBalance = 0;
   let totalProductNumber = 0;
 
   pendingRevenueSnapshot.forEach(doc => {
-    pendingRevenue += doc.data()?.totalCostOfSales;
+    if(!(doc.data()?.isDelivered)) {
+      pendingRevenue += doc.data()?.totalCostOfCommissionOnSales;
+      pendingDeliveryRevenue += doc.data()?.totalcostOfCommissionOnDelivery
+    }
   });
 
   totalRevenueSnapshot.forEach(doc => {
-    totalRevenue += doc.data()?.amount;
+    totalRevenue += doc.data()?.commissionFromSales;
+    deliveryWalletBalance += doc.data()?.commissionFromDelivery
   });
 
   totalProductNumber = productsSnapshot.size;
@@ -155,7 +164,9 @@ const getStat = async () => {
   return {
       pendingRevenue,
       totalRevenue,
-      totalProductNumber
+      totalProductNumber,
+      pendingDeliveryRevenue,
+      deliveryWalletBalance
   };
 }
 
@@ -175,8 +186,8 @@ const getUserStat = async () => {
 
 const getAdminStatistics = async () => {
     const { numberOfOrders, numOfOrdersPerMonth } = await getOrderStat();
-    const { revenuePerMonth } = await getRevenueStat();
-    const { pendingRevenue, totalRevenue, totalProductNumber } = await getStat();
+    const { revenuePerMonth, deliveryRevenuePerMonth } = await getRevenueStat();
+    const { pendingRevenue, totalRevenue, totalProductNumber, pendingDeliveryRevenue, deliveryWalletBalance } = await getStat();
     const {numberOfUsers, numOfUsersPerMonth } = await getUserStat();
 
     return {
@@ -187,7 +198,10 @@ const getAdminStatistics = async () => {
         numberOfUsers,
         numOfProducts: totalProductNumber,
         walletBalance: totalRevenue,
-        pendingBalance: pendingRevenue
+        pendingBalance: pendingRevenue,
+        pendingDeliveryRevenue,
+        deliveryWalletBalance,
+        deliveryRevenuePerMonth
     }
 }
 

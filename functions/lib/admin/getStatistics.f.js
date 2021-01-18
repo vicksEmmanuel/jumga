@@ -118,14 +118,17 @@ const getOrderStat = async () => {
 const getRevenueStat = async () => {
     const revenueSnapshot = await retrieveAllDocumentsInCollction(DATABASE.JUMGA);
     const revenuePerMonth = getYearTemplate();
+    const deliveryRevenuePerMonth = getYearTemplate();
     revenueSnapshot.forEach(doc => {
-        var _a;
+        var _a, _b;
         const createdDate = new Date(doc.data().createdDate.toDate());
         const getYear = `${createdDate.getFullYear()}`;
-        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, revenuePerMonth, Number((_a = doc.data()) === null || _a === void 0 ? void 0 : _a.amount));
+        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, revenuePerMonth, Number((_a = doc.data()) === null || _a === void 0 ? void 0 : _a.commissionFromSales));
+        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, deliveryRevenuePerMonth, Number((_b = doc.data()) === null || _b === void 0 ? void 0 : _b.commissionFromDelivery));
     });
     return {
-        revenuePerMonth
+        revenuePerMonth,
+        deliveryRevenuePerMonth
     };
 };
 const getStat = async () => {
@@ -133,21 +136,29 @@ const getStat = async () => {
     const totalRevenueSnapshot = await retrieveAllDocumentsInCollction(DATABASE.JUMGA);
     const productsSnapshot = await retrieveAllDocumentsInCollction(DATABASE.PRODUCT);
     let pendingRevenue = 0;
+    let pendingDeliveryRevenue = 0;
     let totalRevenue = 0;
+    let deliveryWalletBalance = 0;
     let totalProductNumber = 0;
     pendingRevenueSnapshot.forEach(doc => {
-        var _a;
-        pendingRevenue += (_a = doc.data()) === null || _a === void 0 ? void 0 : _a.totalCostOfSales;
+        var _a, _b, _c;
+        if (!((_a = doc.data()) === null || _a === void 0 ? void 0 : _a.isDelivered)) {
+            pendingRevenue += (_b = doc.data()) === null || _b === void 0 ? void 0 : _b.totalCostOfCommissionOnSales;
+            pendingDeliveryRevenue += (_c = doc.data()) === null || _c === void 0 ? void 0 : _c.totalcostOfCommissionOnDelivery;
+        }
     });
     totalRevenueSnapshot.forEach(doc => {
-        var _a;
-        totalRevenue += (_a = doc.data()) === null || _a === void 0 ? void 0 : _a.amount;
+        var _a, _b;
+        totalRevenue += (_a = doc.data()) === null || _a === void 0 ? void 0 : _a.commissionFromSales;
+        deliveryWalletBalance += (_b = doc.data()) === null || _b === void 0 ? void 0 : _b.commissionFromDelivery;
     });
     totalProductNumber = productsSnapshot.size;
     return {
         pendingRevenue,
         totalRevenue,
-        totalProductNumber
+        totalProductNumber,
+        pendingDeliveryRevenue,
+        deliveryWalletBalance
     };
 };
 const getUserStat = async () => {
@@ -165,8 +176,8 @@ const getUserStat = async () => {
 };
 const getAdminStatistics = async () => {
     const { numberOfOrders, numOfOrdersPerMonth } = await getOrderStat();
-    const { revenuePerMonth } = await getRevenueStat();
-    const { pendingRevenue, totalRevenue, totalProductNumber } = await getStat();
+    const { revenuePerMonth, deliveryRevenuePerMonth } = await getRevenueStat();
+    const { pendingRevenue, totalRevenue, totalProductNumber, pendingDeliveryRevenue, deliveryWalletBalance } = await getStat();
     const { numberOfUsers, numOfUsersPerMonth } = await getUserStat();
     return {
         numberOfOrders,
@@ -176,7 +187,10 @@ const getAdminStatistics = async () => {
         numberOfUsers,
         numOfProducts: totalProductNumber,
         walletBalance: totalRevenue,
-        pendingBalance: pendingRevenue
+        pendingBalance: pendingRevenue,
+        pendingDeliveryRevenue,
+        deliveryWalletBalance,
+        deliveryRevenuePerMonth
     };
 };
 module.exports = functions.https.onCall(async (data, context) => {
