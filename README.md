@@ -1,5 +1,5 @@
 # jumga
-The online market backend system
+The online market backend system https://jumga-store.web.app/
 
 ### Run the project locally
 > Run the switch_env.sh script
@@ -79,5 +79,4 @@ The online market backend system
 > You can view the values of each payment for items at https://jumga-store.web.app/admin
 
 > Your login details should be email - admin@gmail.com, password - 12345hb
-
 
