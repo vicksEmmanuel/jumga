@@ -16,6 +16,8 @@ The online market backend system https://jumga-store.web.app/
 
 > payment system is handled in two files, the src/flutterwave/processPayment.f.ts && src/flutterwave/acceptPayment.f.ts
 
+> payment method includes card and bank transfer
+
 ### Process Payment
 ###### file - (src/flutterwave/processPayment.f.ts)
 > The processPayment handles payment of both the store before approval and for any item to be purchased
@@ -78,5 +80,5 @@ The online market backend system https://jumga-store.web.app/
 ### View Values After Payment
 > You can view the values of each payment for items at https://jumga-store.web.app/admin
 
-> Your login details should be email - admin@gmail.com, password - 12345hb
+> Your login details should be email - jumga@gmail.com, password - 123456 . This is an admin login details
 

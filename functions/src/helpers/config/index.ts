@@ -70,7 +70,7 @@ module.exports = {
   EncryptionKey: CONFIG.EncryptionKey,
   jumgaHashKey: 'jumgaparadoxyconfig2021',
   jumgaLogo: CONFIG.jumgaLogo,
-  storePrice: 0.04, //TODO: Change to 20
+  storePrice: 20, //TODO: Change to 20
   currency: 'USD',
   webhook: CONFIG.webhook,
   geolocationRoute: 'http://ip-api.com/json?fields=status,country,currency,message',
