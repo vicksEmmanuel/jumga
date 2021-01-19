@@ -127,8 +127,8 @@ const getRevenueStat = async () => {
     revenueSnapshot.forEach(doc => {
         const createdDate = new Date(doc.data().createdDate.toDate());
         const getYear = `${createdDate.getFullYear()}`;
-        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, revenuePerMonth, Number(doc.data()?.commissionFromSales));
-        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, deliveryRevenuePerMonth, Number(doc.data()?.commissionFromDelivery));
+        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, revenuePerMonth, Number(doc.data()?.commissionFromSales).toFixed(2));
+        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, deliveryRevenuePerMonth, Number(doc.data()?.commissionFromDelivery).toFixed(2));
     });
 
     return {

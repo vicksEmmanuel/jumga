@@ -49,6 +49,7 @@ module.exports = {
     PAYMENTHOLDER: 'paymentHolder',
     PRODUCT: 'products',
     RIDERS: 'dispatchRiders',
+    PROBLEMPAYMENT: 'problemsPayment',
     CART: 'carts',
     ORDER: 'orders',
     JUMGA: 'jumga'

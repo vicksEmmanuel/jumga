@@ -125,7 +125,7 @@ const getRevenueStat = async (data) => {
         var _a;
         const orderDate = new Date(doc.data().orderDate.toDate());
         const getYear = `${orderDate.getFullYear()}`;
-        determineWhatRevenueMonth(orderDate.getMonth() + 1, getYear, revenuePerMonth, Number((_a = doc.data()) === null || _a === void 0 ? void 0 : _a.totalCostOfSales));
+        determineWhatRevenueMonth(orderDate.getMonth() + 1, getYear, revenuePerMonth, Number((_a = doc.data()) === null || _a === void 0 ? void 0 : _a.totalCostOfSales).toFixed(2));
     });
     return {
         revenuePerMonth

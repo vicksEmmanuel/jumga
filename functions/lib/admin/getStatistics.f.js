@@ -123,8 +123,8 @@ const getRevenueStat = async () => {
         var _a, _b;
         const createdDate = new Date(doc.data().createdDate.toDate());
         const getYear = `${createdDate.getFullYear()}`;
-        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, revenuePerMonth, Number((_a = doc.data()) === null || _a === void 0 ? void 0 : _a.commissionFromSales));
-        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, deliveryRevenuePerMonth, Number((_b = doc.data()) === null || _b === void 0 ? void 0 : _b.commissionFromDelivery));
+        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, revenuePerMonth, Number((_a = doc.data()) === null || _a === void 0 ? void 0 : _a.commissionFromSales).toFixed(2));
+        determineWhatRevenueMonth(createdDate.getMonth() + 1, getYear, deliveryRevenuePerMonth, Number((_b = doc.data()) === null || _b === void 0 ? void 0 : _b.commissionFromDelivery).toFixed(2));
     });
     return {
         revenuePerMonth,
