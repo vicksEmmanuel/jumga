@@ -82,3 +82,4 @@ The online market backend system https://jumga-store.web.app/
 
 > Your login details should be email - jumga@gmail.com, password - 123456 . This is an admin login details
 
+> The Admin Order details contains the values for jumga commission on sales, jumga cost of sales, commission on delivery, delivery costs etc.
